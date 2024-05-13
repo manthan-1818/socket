@@ -1,16 +1,17 @@
-// Client2.js
-
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-
+import "./App.css";
 const socket = io.connect("http://localhost:4000");
 
-function App() {
+function Client2() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
 
   function sendMessage() {
-    socket.emit("send_message", { message });
+    if (message.trim() !== "") { 
+      socket.emit("send_message", { message });
+      setMessage(""); 
+    }
   }
 
   useEffect(() => {
@@ -20,18 +21,23 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h1>Client 2</h1>
-      <input
-        placeholder="Message"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <button onClick={sendMessage}>Send message</button>
-      <h2>Message Received: {messageReceived}</h2>
+      <div className="message-container">
+        <input
+          className="message-input"
+          placeholder="Type your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button className="send-button" onClick={sendMessage}>Send</button>
+      </div>
+      <div className="received-message">
+        <h2>Message Received:</h2>
+        <p>{messageReceived}</p>
+      </div>
     </div>
   );
 }
 
-export default App;
-
+export default Client2;
